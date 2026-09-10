@@ -1,0 +1,542 @@
+// ============================================================
+// A-FRAME KG — Полная схема БД (21 таблица)
+// PostgreSQL database for cabin booking service in Kyrgyzstan
+// На основе A-FRAME_KG_DB.md
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum Role {
+  USER
+  OWNER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BLOCKED
+}
+
+enum CabinStatus {
+  DRAFT      // черновик
+  PENDING    // на модерации
+  PUBLISHED  // опубликован
+  BLOCKED    // заблокирован
+  ARCHIVED   // архивирован
+}
+
+enum BookingStatus {
+  PENDING    // ожидает подтверждения
+  CONFIRMED  // подтверждено
+  CANCELLED  // отменено
+  COMPLETED  // завершено
+  REJECTED   // отклонено
+}
+
+enum AvailabilityStatus {
+  AVAILABLE  // доступно
+  BOOKED     // забронировано
+  BLOCKED    // заблокировано владельцем
+}
+
+enum ReviewStatus {
+  PENDING    // на модерации
+  PUBLISHED  // опубликован
+  HIDDEN     // скрыт
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+// ─────────────────────────────────────────────
+// 1. USERS
+// ─────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(cuid())
+  firstName    String     @map("first_name") @db.VarChar(100)
+  lastName     String     @map("last_name") @db.VarChar(100)
+  email        String     @unique @db.VarChar(255)
+  phone        String?    @db.VarChar(30)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  role         Role       @default(USER)
+  status       UserStatus @default(ACTIVE)
+  avatarUrl    String?    @map("avatar_url") @db.Text
+  isVerified   Boolean    @default(false) @map("is_verified")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Связи
+  ownerProfile  OwnerProfile?
+  cabins        Cabin[]
+  bookings      Booking[]
+  favorites     Favorite[]
+  reviews       Review[]
+  notifications Notification[]
+  searchHistory SearchHistory[]
+  payments      Payment[]
+  ownerPayouts  OwnerPayout[]
+  auditLogs     AuditLog[]
+  cabinViews    CabinView[]
+
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────
+// 2. OWNER_PROFILES
+// ─────────────────────────────────────────────
+
+model OwnerProfile {
+  id                 String             @id @default(cuid())
+  userId             String             @unique @map("user_id")
+  businessName       String?            @map("business_name") @db.VarChar(255)
+  description        String?            @db.Text
+  contactPhone       String?            @map("contact_phone") @db.VarChar(30)
+  verificationStatus VerificationStatus @default(PENDING) @map("verification_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("owner_profiles")
+}
+
+// ─────────────────────────────────────────────
+// 3. REGIONS
+// ─────────────────────────────────────────────
+
+model Region {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique @db.VarChar(100)
+  slug     String  @unique @db.VarChar(100)
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  locations     Location[]
+  searchHistory SearchHistory[]
+
+  @@map("regions")
+}
+
+// ─────────────────────────────────────────────
+// 4. LOCATIONS
+// ─────────────────────────────────────────────
+
+model Location {
+  id        String  @id @default(cuid())
+  regionId  Int     @map("region_id")
+  city      String? @db.VarChar(150)
+  village   String? @db.VarChar(150)
+  address   String? @db.Text
+  latitude  Decimal? @db.Decimal(10, 7)
+  longitude Decimal? @db.Decimal(10, 7)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  region Region  @relation(fields: [regionId], references: [id], onDelete: Cascade)
+  cabins Cabin[]
+
+  @@map("locations")
+}
+
+// ─────────────────────────────────────────────
+// 5. CABINS
+// ─────────────────────────────────────────────
+
+model Cabin {
+  id           String      @id @default(cuid())
+  ownerId      String      @map("owner_id")
+  locationId   String      @map("location_id")
+  title        String      @db.VarChar(255)
+  slug         String      @unique @db.VarChar(255)
+  description  String?     @db.Text
+  pricePerNight Decimal    @map("price_per_night") @db.Decimal(10, 2)
+  maxGuests    Int         @map("max_guests")
+  bedrooms     Int         @default(1)
+  beds         Int         @default(1)
+  bathrooms    Int         @default(1)
+  rating       Decimal     @default(0) @db.Decimal(2, 1)
+  reviewsCount Int         @default(0) @map("reviews_count")
+  status       CabinStatus @default(DRAFT)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  owner    User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  images           CabinImage[]
+  amenities        CabinAmenity[]
+  rules            CabinRule[]
+  favorites        Favorite[]
+  bookings         Booking[]
+  availability     CabinAvailability[]
+  reviews          Review[]
+  promotions       Promotion[]
+  views            CabinView[]
+
+  @@map("cabins")
+}
+
+// ─────────────────────────────────────────────
+// 6. CABIN_IMAGES
+// ─────────────────────────────────────────────
+
+model CabinImage {
+  id        String  @id @default(cuid())
+  cabinId   String  @map("cabin_id")
+  imageUrl  String  @map("image_url") @db.Text
+  altText   String? @map("alt_text") @db.VarChar(255)
+  sortOrder Int     @default(0) @map("sort_order")
+  isMain    Boolean @default(false) @map("is_main")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cabin Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+
+  @@map("cabin_images")
+}
+
+// ─────────────────────────────────────────────
+// 7. AMENITIES
+// ─────────────────────────────────────────────
+
+model Amenity {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique @db.VarChar(100)
+  slug     String  @unique @db.VarChar(100)
+  icon     String? @db.VarChar(100)
+  isActive Boolean @default(true) @map("is_active")
+
+  cabins CabinAmenity[]
+
+  @@map("amenities")
+}
+
+// ─────────────────────────────────────────────
+// 8. CABIN_AMENITIES (many-to-many)
+// ─────────────────────────────────────────────
+
+model CabinAmenity {
+  cabinId   String @map("cabin_id")
+  amenityId Int    @map("amenity_id")
+
+  cabin   Cabin   @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+  amenity Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([cabinId, amenityId])
+  @@map("cabin_amenities")
+}
+
+// ─────────────────────────────────────────────
+// 9. CABIN_RULES
+// ─────────────────────────────────────────────
+
+model CabinRule {
+  id          String  @id @default(cuid())
+  cabinId     String  @map("cabin_id")
+  title       String  @db.VarChar(255)
+  description String? @db.Text
+  isActive    Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cabin Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+
+  @@map("cabin_rules")
+}
+
+// ─────────────────────────────────────────────
+// 10. FAVORITES
+// ─────────────────────────────────────────────
+
+model Favorite {
+  id      String @id @default(cuid())
+  userId  String @map("user_id")
+  cabinId String @map("cabin_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cabin Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cabinId])
+  @@map("favorites")
+}
+
+// ─────────────────────────────────────────────
+// 11. BOOKINGS
+// ─────────────────────────────────────────────
+
+model Booking {
+  id              String        @id @default(cuid())
+  bookingNumber   String        @unique @map("booking_number") @db.VarChar(30)
+  userId          String        @map("user_id")
+  cabinId         String        @map("cabin_id")
+  checkIn         DateTime      @map("check_in") @db.Date
+  checkOut        DateTime      @map("check_out") @db.Date
+  guestsCount     Int           @map("guests_count")
+  guestName       String        @map("guest_name") @db.VarChar(200)
+  guestPhone      String        @map("guest_phone") @db.VarChar(30)
+  guestEmail      String        @map("guest_email") @db.VarChar(255)
+  pricePerNight   Decimal       @map("price_per_night") @db.Decimal(10, 2)
+  nights          Int
+  subtotal        Decimal       @db.Decimal(10, 2)
+  discountAmount  Decimal       @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  serviceFee      Decimal       @default(0) @map("service_fee") @db.Decimal(10, 2)
+  totalAmount     Decimal       @map("total_amount") @db.Decimal(10, 2)
+  status          BookingStatus @default(PENDING)
+  cancellationReason String?    @map("cancellation_reason") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user   User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cabin  Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+
+  review       Review?
+  payments     Payment[]
+  ownerPayout  OwnerPayout?
+
+  @@map("bookings")
+}
+
+// ─────────────────────────────────────────────
+// 12. CABIN_AVAILABILITY
+// ─────────────────────────────────────────────
+
+model CabinAvailability {
+  id      String             @id @default(cuid())
+  cabinId String             @map("cabin_id")
+  date    DateTime           @db.Date
+  status  AvailabilityStatus @default(AVAILABLE)
+  price   Decimal?           @db.Decimal(10, 2)
+  note    String?            @db.Text
+
+  cabin Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+
+  @@unique([cabinId, date])
+  @@map("cabin_availability")
+}
+
+// ─────────────────────────────────────────────
+// 13. REVIEWS
+// ─────────────────────────────────────────────
+
+model Review {
+  id        String       @id @default(cuid())
+  userId    String       @map("user_id")
+  cabinId   String       @map("cabin_id")
+  bookingId String       @unique @map("booking_id")
+  rating    Int          // 1-5
+  text      String?      @db.Text
+  status    ReviewStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cabin   Cabin   @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  images ReviewImage[]
+
+  @@map("reviews")
+}
+
+// ─────────────────────────────────────────────
+// 14. REVIEW_IMAGES
+// ─────────────────────────────────────────────
+
+model ReviewImage {
+  id       String @id @default(cuid())
+  reviewId String @map("review_id")
+  imageUrl String @map("image_url") @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@map("review_images")
+}
+
+// ─────────────────────────────────────────────
+// 15. NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Notification {
+  id        String  @id @default(cuid())
+  userId    String  @map("user_id")
+  type      String  @db.VarChar(50)
+  title     String  @db.VarChar(255)
+  message   String  @db.Text
+  bookingId String? @map("booking_id")
+  isRead    Boolean @default(false) @map("is_read")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────────────
+// 16. SEARCH_HISTORY
+// ─────────────────────────────────────────────
+
+model SearchHistory {
+  id          String    @id @default(cuid())
+  userId      String    @map("user_id")
+  regionId    Int?      @map("region_id")
+  checkIn     DateTime? @map("check_in") @db.Date
+  checkOut    DateTime? @map("check_out") @db.Date
+  guestsCount Int?      @map("guests_count")
+  minPrice    Decimal?  @map("min_price") @db.Decimal(10, 2)
+  maxPrice    Decimal?  @map("max_price") @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  region Region? @relation(fields: [regionId], references: [id], onDelete: SetNull)
+
+  @@map("search_history")
+}
+
+// ─────────────────────────────────────────────
+// 17. PROMOTIONS
+// ─────────────────────────────────────────────
+
+model Promotion {
+  id            String       @id @default(cuid())
+  cabinId       String       @map("cabin_id")
+  title         String       @db.VarChar(255)
+  description   String?      @db.Text
+  discountType  DiscountType @map("discount_type")
+  discountValue Decimal      @map("discount_value") @db.Decimal(10, 2)
+  startDate     DateTime     @map("start_date") @db.Date
+  endDate       DateTime     @map("end_date") @db.Date
+  isActive      Boolean      @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  cabin Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+
+  @@map("promotions")
+}
+
+// ─────────────────────────────────────────────
+// 18. PAYMENTS
+// ─────────────────────────────────────────────
+
+model Payment {
+  id            String        @id @default(cuid())
+  bookingId     String        @map("booking_id")
+  userId        String        @map("user_id")
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("KGS") @db.VarChar(10)
+  paymentMethod String        @map("payment_method") @db.VarChar(50)
+  status        PaymentStatus @default(PENDING)
+  transactionId String?       @unique @map("transaction_id") @db.VarChar(255)
+  paidAt        DateTime?     @map("paid_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// ─────────────────────────────────────────────
+// 19. CABIN_VIEWS
+// ─────────────────────────────────────────────
+
+model CabinView {
+  id       String   @id @default(cuid())
+  cabinId  String   @map("cabin_id")
+  userId   String?  @map("user_id")
+  viewedAt DateTime @default(now()) @map("viewed_at")
+
+  cabin Cabin @relation(fields: [cabinId], references: [id], onDelete: Cascade)
+  user  User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("cabin_views")
+}
+
+// ─────────────────────────────────────────────
+// 20. OWNER_PAYOUTS
+// ─────────────────────────────────────────────
+
+model OwnerPayout {
+  id               String       @id @default(cuid())
+  ownerId          String       @map("owner_id")
+  bookingId        String       @unique @map("booking_id")
+  grossAmount      Decimal      @map("gross_amount") @db.Decimal(10, 2)
+  commissionAmount Decimal      @map("commission_amount") @db.Decimal(10, 2)
+  netAmount        Decimal      @map("net_amount") @db.Decimal(10, 2)
+  status           PayoutStatus @default(PENDING)
+  paidAt           DateTime?    @map("paid_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  owner   User    @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("owner_payouts")
+}
+
+// ─────────────────────────────────────────────
+// 21. AUDIT_LOGS
+// ─────────────────────────────────────────────
+
+model AuditLog {
+  id         String  @id @default(cuid())
+  userId     String  @map("user_id")
+  action     String  @db.VarChar(100)
+  entityType String  @map("entity_type") @db.VarChar(100)
+  entityId   String? @map("entity_id")
+  oldData    Json?   @map("old_data")
+  newData    Json?   @map("new_data")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("audit_logs")
+}
