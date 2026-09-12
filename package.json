@@ -12,14 +12,24 @@
     "db:migrate": "prisma migrate dev",
     "db:migrate:apply": "node scripts/apply-migration.js",
     "db:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "telegram:test": "node scripts/test-telegram-bot.js",
+    "telegram:dev": "tsx scripts/run-telegram-bot.ts",
+    "telegram:setup": "tsx scripts/setup-telegram-webhook.ts",
+    "admin:create": "node scripts/create-admin.js",
+    "admin:hash-password": "node scripts/hash-password.js",
+    "admin:setup-telegram": "node scripts/setup-telegram-settings.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
+    "bcryptjs": "^3.0.3",
+    "grammy": "^1.46.0",
+    "jose": "^6.2.12",
     "next": "16.3.4",
+    "next-intl": "^4.14.4",
     "pg": "^8.13.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",

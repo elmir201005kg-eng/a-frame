@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 async function getStats() {
   const [
@@ -48,6 +49,7 @@ async function getRecentBookings() {
 export default async function AdminDashboard() {
   const stats = await getStats();
   const recentBookings = await getRecentBookings();
+  const t = useTranslations('admin');
 
   return (
     <div>
@@ -55,7 +57,7 @@ export default async function AdminDashboard() {
       <div className="admin-stats-grid">
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Всего пользователей</span>
+            <span className="admin-stat-title">{t('dashboard.stats.totalUsers')}</span>
             <div className="admin-stat-icon blue">👥</div>
           </div>
           <div className="admin-stat-value">{stats.totalUsers}</div>
@@ -64,7 +66,7 @@ export default async function AdminDashboard() {
 
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Владельцев</span>
+            <span className="admin-stat-title">{t('dashboard.stats.owners')}</span>
             <div className="admin-stat-icon green">🏢</div>
           </div>
           <div className="admin-stat-value">{stats.totalOwners}</div>
@@ -73,7 +75,7 @@ export default async function AdminDashboard() {
 
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Домиков</span>
+            <span className="admin-stat-title">{t('dashboard.stats.cabins')}</span>
             <div className="admin-stat-icon yellow">🏠</div>
           </div>
           <div className="admin-stat-value">{stats.totalCabins}</div>
@@ -82,7 +84,7 @@ export default async function AdminDashboard() {
 
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Бронирований</span>
+            <span className="admin-stat-title">{t('dashboard.stats.bookings')}</span>
             <div className="admin-stat-icon blue">📅</div>
           </div>
           <div className="admin-stat-value">{stats.totalBookings}</div>
@@ -91,18 +93,18 @@ export default async function AdminDashboard() {
 
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Ожидают подтверждения</span>
+            <span className="admin-stat-title">{t('dashboard.stats.pendingBookings')}</span>
             <div className="admin-stat-icon yellow">⏳</div>
           </div>
           <div className="admin-stat-value">{stats.pendingBookings}</div>
           <Link href="/admin/bookings" className="admin-btn admin-btn-secondary" style={{ marginTop: '1rem' }}>
-            Просмотреть
+            {t('dashboard.viewAll')}
           </Link>
         </div>
 
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Общий доход</span>
+            <span className="admin-stat-title">{t('dashboard.stats.totalRevenue')}</span>
             <div className="admin-stat-icon green">💰</div>
           </div>
           <div className="admin-stat-value">{Number(stats.totalRevenue).toLocaleString()} с</div>
@@ -111,7 +113,7 @@ export default async function AdminDashboard() {
 
         <div className="admin-stat-card">
           <div className="admin-stat-header">
-            <span className="admin-stat-title">Отзывы на модерации</span>
+            <span className="admin-stat-title">{t('dashboard.stats.pendingReviews')}</span>
             <div className="admin-stat-icon red">⭐</div>
           </div>
           <div className="admin-stat-value">{stats.pendingReviews}</div>
@@ -124,21 +126,21 @@ export default async function AdminDashboard() {
       {/* Последние бронирования */}
       <div className="admin-table-container">
         <div className="admin-table-header">
-          <h2 className="admin-table-title">Последние бронирования</h2>
+          <h2 className="admin-table-title">{t('dashboard.recentBookings')}</h2>
           <Link href="/admin/bookings" className="admin-btn admin-btn-primary">
-            Все бронирования
+            {t('bookings.allBookings')}
           </Link>
         </div>
 
         <table className="admin-table">
           <thead>
             <tr>
-              <th>Номер</th>
-              <th>Пользователь</th>
-              <th>Домик</th>
+              <th>{t('bookings.bookingNumber')}</th>
+              <th>{t('bookings.user')}</th>
+              <th>{t('bookings.cabin')}</th>
               <th>Даты</th>
-              <th>Сумма</th>
-              <th>Статус</th>
+              <th>{t('bookings.amount')}</th>
+              <th>{t('bookings.status')}</th>
             </tr>
           </thead>
           <tbody>
@@ -165,11 +167,11 @@ export default async function AdminDashboard() {
                     }`}
                   >
                     {booking.status === 'CONFIRMED'
-                      ? 'Подтверждено'
+                      ? t('bookings.statuses.confirmed')
                       : booking.status === 'PENDING'
-                      ? 'Ожидает'
+                      ? t('bookings.statuses.pending')
                       : booking.status === 'CANCELLED'
-                      ? 'Отменено'
+                      ? t('bookings.statuses.cancelled')
                       : booking.status}
                   </span>
                 </td>

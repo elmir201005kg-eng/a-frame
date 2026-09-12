@@ -1,0 +1,192 @@
+{
+  "dashboard": {
+    "title": "Дашборд",
+    "stats": {
+      "totalUsers": "Всего пользователей",
+      "owners": "Владельцев",
+      "cabins": "Домиков",
+      "bookings": "Бронирований",
+      "pendingBookings": "Ожидают подтверждения",
+      "totalRevenue": "Общий доход",
+      "pendingReviews": "Отзывы на модерации"
+    },
+    "recentBookings": "Последние бронирования",
+    "viewAll": "Все бронирования"
+  },
+  "users": {
+    "title": "Управление пользователями",
+    "allUsers": "Все пользователи",
+    "name": "Имя",
+    "email": "Email",
+    "phone": "Телефон",
+    "role": "Роль",
+    "status": "Статус",
+    "bookingsCount": "Бронирований",
+    "reviewsCount": "Отзывов",
+    "registeredAt": "Дата регистрации",
+    "actions": "Действия",
+    "roles": {
+      "admin": "Админ",
+      "owner": "Владелец",
+      "user": "Пользователь"
+    },
+    "statuses": {
+      "active": "Активен",
+      "inactive": "Неактивен",
+      "blocked": "Заблокирован"
+    }
+  },
+  "owners": {
+    "title": "Управление владельцами",
+    "business": "Бизнес",
+    "cabinsCount": "Домиков",
+    "verificationStatus": "Статус проверки",
+    "verify": "Проверить",
+    "verified": "Проверен",
+    "pending": "На проверке",
+    "rejected": "Отклонён"
+  },
+  "cabins": {
+    "title": "Управление домиками",
+    "allCabins": "Все домики",
+    "addCabin": "Добавить домик",
+    "name": "Название",
+    "owner": "Владелец",
+    "location": "Локация",
+    "pricePerNight": "Цена/ночь",
+    "guests": "Гостей",
+    "rating": "Рейтинг",
+    "reviews": "отзывов",
+    "photos": "фото",
+    "status": "Статус",
+    "statuses": {
+      "draft": "Черновик",
+      "pending": "На модерации",
+      "published": "Опубликован",
+      "blocked": "Заблокирован",
+      "archived": "Архивирован"
+    }
+  },
+  "bookings": {
+    "title": "Управление бронированиями",
+    "allBookings": "Все бронирования",
+    "bookingNumber": "Номер",
+    "user": "Пользователь",
+    "cabin": "Домик",
+    "checkIn": "Заезд",
+    "checkOut": "Выезд",
+    "nights": "Ночей",
+    "guests": "Гостей",
+    "amount": "Сумма",
+    "status": "Статус",
+    "createdAt": "Дата создания",
+    "details": "Детали",
+    "statuses": {
+      "pending": "Ожидает",
+      "confirmed": "Подтверждено",
+      "cancelled": "Отменено",
+      "completed": "Завершено",
+      "rejected": "Отклонено"
+    }
+  },
+  "reviews": {
+    "title": "Управление отзывами",
+    "allReviews": "Все отзывы",
+    "user": "Пользователь",
+    "cabin": "Домик",
+    "rating": "Рейтинг",
+    "text": "Отзыв",
+    "status": "Статус",
+    "date": "Дата",
+    "approve": "Одобрить",
+    "hide": "Скрыть",
+    "show": "Показать",
+    "statuses": {
+      "pending": "На модерации",
+      "published": "Опубликован",
+      "hidden": "Скрыт"
+    }
+  },
+  "regions": {
+    "title": "Регионы Кыргызстана",
+    "add": "Добавить регион",
+    "name": "Название",
+    "slug": "Slug",
+    "locationsCount": "Локаций",
+    "status": "Статус",
+    "createdAt": "Дата создания",
+    "active": "Активен",
+    "inactive": "Неактивен"
+  },
+  "amenities": {
+    "title": "Удобства",
+    "add": "Добавить удобство",
+    "name": "Название",
+    "slug": "Slug",
+    "icon": "Иконка",
+    "usageCount": "Использований",
+    "cabins": "домиков",
+    "status": "Статус",
+    "active": "Активно",
+    "inactive": "Неактивно"
+  },
+  "statistics": {
+    "title": "Статистика",
+    "usersByRole": "Пользователи по ролям",
+    "cabinsByStatus": "Домики по статусам",
+    "bookingsByStatus": "Бронирования по статусам",
+    "topCabins": "Топ-5 популярных домиков"
+  },
+  "settings": {
+    "title": "Настройки системы",
+    "siteName": "Название сайта",
+    "adminEmail": "Email администратора",
+    "commission": "Комиссия сервиса (%)",
+    "currency": "Валюта",
+    "moderationEnabled": "Модерация отзывов",
+    "autoConfirmBookings": "Автоматическое подтверждение бронирований",
+    "maintenanceMode": "Режим технического обслуживания",
+    "dangerZone": "Опасная зона",
+    "clearCache": "Очистка кэша",
+    "exportDatabase": "Экспорт базы данных"
+  },
+  "sidebar": {
+    "main": "Главное",
+    "management": "Управление",
+    "references": "Справочники",
+    "finance": "Финансы",
+    "system": "Система"
+  },
+  "auth": {
+    "login": {
+      "title": "Вход в админ-панель",
+      "subtitle": "Введите свои учетные данные для входа",
+      "email": "Email",
+      "emailPlaceholder": "admin@example.com",
+      "password": "Пароль",
+      "passwordPlaceholder": "Введите пароль",
+      "loginButton": "Войти",
+      "loggingIn": "Вход..."
+    },
+    "twoFactor": {
+      "title": "Двухфакторная аутентификация",
+      "subtitle": "Код отправлен в ваш Telegram",
+      "codePlaceholder": "Введите 6-значный код",
+      "verifyButton": "Подтвердить",
+      "verifying": "Проверка...",
+      "resendCode": "Отправить код повторно",
+      "codeResent": "Код отправлен повторно"
+    },
+    "errors": {
+      "invalidCredentials": "Неверный email или пароль",
+      "invalidCode": "Неверный код подтверждения",
+      "codeExpired": "Код истек. Запросите новый",
+      "userNotFound": "Пользователь не найден",
+      "notAdmin": "У вас нет прав администратора",
+      "telegramNotConfigured": "Telegram не настроен",
+      "somethingWrong": "Что-то пошло не так. Попробуйте снова"
+    },
+    "logout": "Выйти",
+    "profile": "Профиль"
+  }
+}

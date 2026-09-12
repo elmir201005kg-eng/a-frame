@@ -1,0 +1,192 @@
+{
+  "dashboard": {
+    "title": "Башкы бет",
+    "stats": {
+      "totalUsers": "Бардык колдонуучулар",
+      "owners": "Ээлер",
+      "cabins": "Домдор",
+      "bookings": "Брондоолор",
+      "pendingBookings": "Тастыктоону күтүүдө",
+      "totalRevenue": "Жалпы киреше",
+      "pendingReviews": "Модерациядагы сын-пикирлер"
+    },
+    "recentBookings": "Акыркы брондоолор",
+    "viewAll": "Бардык брондоолор"
+  },
+  "users": {
+    "title": "Колдонуучуларды башкаруу",
+    "allUsers": "Бардык колдонуучулар",
+    "name": "Аты",
+    "email": "Email",
+    "phone": "Телефон",
+    "role": "Ролу",
+    "status": "Статус",
+    "bookingsCount": "Брондоолор",
+    "reviewsCount": "Сын-пикирлер",
+    "registeredAt": "Катталуу датасы",
+    "actions": "Аракеттер",
+    "roles": {
+      "admin": "Админ",
+      "owner": "Ээси",
+      "user": "Колдонуучу"
+    },
+    "statuses": {
+      "active": "Активдүү",
+      "inactive": "Активдүү эмес",
+      "blocked": "Бөгөттөлгөн"
+    }
+  },
+  "owners": {
+    "title": "Ээлерди башкаруу",
+    "business": "Бизнес",
+    "cabinsCount": "Домдор",
+    "verificationStatus": "Текшерүү статусу",
+    "verify": "Текшерүү",
+    "verified": "Текшерилген",
+    "pending": "Текшерүүдө",
+    "rejected": "Четке кагылды"
+  },
+  "cabins": {
+    "title": "Домдорду башкаруу",
+    "allCabins": "Бардык домдор",
+    "addCabin": "Дом кошуу",
+    "name": "Аталышы",
+    "owner": "Ээси",
+    "location": "Локация",
+    "pricePerNight": "Баасы/түн",
+    "guests": "Конактар",
+    "rating": "Рейтинг",
+    "reviews": "сын-пикир",
+    "photos": "сүрөт",
+    "status": "Статус",
+    "statuses": {
+      "draft": "Чийме",
+      "pending": "Модерацияда",
+      "published": "Жарыяланды",
+      "blocked": "Бөгөттөлдү",
+      "archived": "Архивделди"
+    }
+  },
+  "bookings": {
+    "title": "Брондоолорду башкаруу",
+    "allBookings": "Бардык брондоолор",
+    "bookingNumber": "Номер",
+    "user": "Колдонуучу",
+    "cabin": "Дом",
+    "checkIn": "Келүү",
+    "checkOut": "Кетүү",
+    "nights": "Түндөр",
+    "guests": "Конактар",
+    "amount": "Сумма",
+    "status": "Статус",
+    "createdAt": "Түзүлгөн датасы",
+    "details": "Деталдар",
+    "statuses": {
+      "pending": "Күтүүдө",
+      "confirmed": "Тастыкталды",
+      "cancelled": "Жокко чыгарылды",
+      "completed": "Аяктады",
+      "rejected": "Четке кагылды"
+    }
+  },
+  "reviews": {
+    "title": "Сын-пикирлерди башкаруу",
+    "allReviews": "Бардык сын-пикирлер",
+    "user": "Колдонуучу",
+    "cabin": "Дом",
+    "rating": "Рейтинг",
+    "text": "Сын-пикир",
+    "status": "Статус",
+    "date": "Дата",
+    "approve": "Макулдоо",
+    "hide": "Жашыруу",
+    "show": "Көрсөтүү",
+    "statuses": {
+      "pending": "Модерацияда",
+      "published": "Жарыяланды",
+      "hidden": "Жашырылган"
+    }
+  },
+  "regions": {
+    "title": "Кыргызстандын аймактары",
+    "add": "Аймак кошуу",
+    "name": "Аталышы",
+    "slug": "Slug",
+    "locationsCount": "Локациялар",
+    "status": "Статус",
+    "createdAt": "Түзүлгөн датасы",
+    "active": "Активдүү",
+    "inactive": "Активдүү эмес"
+  },
+  "amenities": {
+    "title": "Ыңгайлуулуктар",
+    "add": "Ыңгайлуулук кошуу",
+    "name": "Аталышы",
+    "slug": "Slug",
+    "icon": "Иконка",
+    "usageCount": "Колдонулушу",
+    "cabins": "домдор",
+    "status": "Статус",
+    "active": "Активдүү",
+    "inactive": "Активдүү эмес"
+  },
+  "statistics": {
+    "title": "Статистика",
+    "usersByRole": "Ролу боюнча колдонуучулар",
+    "cabinsByStatus": "Статусу боюнча домдор",
+    "bookingsByStatus": "Статусу боюнча брондоолор",
+    "topCabins": "Топ-5 популярдуу домдор"
+  },
+  "settings": {
+    "title": "Тутум жөндөөлөрү",
+    "siteName": "Сайттын аталышы",
+    "adminEmail": "Администратордун Email",
+    "commission": "Кызмат комиссиясы (%)",
+    "currency": "Валюта",
+    "moderationEnabled": "Сын-пикирлерди модерациялоо",
+    "autoConfirmBookings": "Брондоолорду автоматтык тастыктоо",
+    "maintenanceMode": "Техникалык тейлөө режими",
+    "dangerZone": "Коркунучтуу зона",
+    "clearCache": "Кэшти тазалоо",
+    "exportDatabase": "Маалымат базасын экспорттоо"
+  },
+  "sidebar": {
+    "main": "Башкы",
+    "management": "Башкаруу",
+    "references": "Маалымдамалар",
+    "finance": "Каржы",
+    "system": "Тутум"
+  },
+  "auth": {
+    "login": {
+      "title": "Админ-панелге кирүү",
+      "subtitle": "Кирүү үчүн маалыматтарыңызды киргизиңиз",
+      "email": "Email",
+      "emailPlaceholder": "admin@example.com",
+      "password": "Сырсөз",
+      "passwordPlaceholder": "Сырсөздү киргизиңиз",
+      "loginButton": "Кирүү",
+      "loggingIn": "Кирүү..."
+    },
+    "twoFactor": {
+      "title": "Эки факторлуу аутентификация",
+      "subtitle": "Код сиздин Telegram'га жөнөтүлдү",
+      "codePlaceholder": "6 саналуу кодду киргизиңиз",
+      "verifyButton": "Тастыктоо",
+      "verifying": "Текшерүү...",
+      "resendCode": "Кодду кайра жөнөтүү",
+      "codeResent": "Код кайра жөнөтүлдү"
+    },
+    "errors": {
+      "invalidCredentials": "Email же сырсөз туура эмес",
+      "invalidCode": "Тастыктоо коду туура эмес",
+      "codeExpired": "Коддун мөөнөтү бүттү. Жаңысын сураңыз",
+      "userNotFound": "Колдонуучу табылган жок",
+      "notAdmin": "Сизде администратор укуктары жок",
+      "telegramNotConfigured": "Telegram конфигурацияланган эмес",
+      "somethingWrong": "Бир нерсе туура эмес болду. Кайра аракет кылыңыз"
+    },
+    "logout": "Чыгуу",
+    "profile": "Профиль"
+  }
+}
