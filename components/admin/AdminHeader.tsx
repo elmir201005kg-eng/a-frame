@@ -132,6 +132,7 @@ export default function AdminHeader() {
                 />
               </svg>
             </button>
+            <img src="" alt="" />
 
             {/* Dropdown Menu */}
             {showDropdown && (
